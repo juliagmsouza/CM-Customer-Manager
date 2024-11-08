@@ -6,8 +6,8 @@
             <navbar-toggle-button @click.native="showSidebar">
                 
             </navbar-toggle-button>
-            <router-link class="navbar-brand" to="/">
-                <img :src="logo" class="navbar-brand-img" alt="...">
+            <router-link class="navbar-brand" to="/contacts">
+                <img src="img/theme/logo.png" class="navbar-brand-img" alt="...">
             </router-link>
 
             <slot name="mobile-right">

@@ -1,12 +1,15 @@
 <template>
   <div>
     <!-- Header -->
-    <div class="header py-7 py-lg-8 pt-lg-9">
+    <div class="header py-5 py-lg-6 pt-lg-7">
       <b-container>
         <div class="header-body text-center mb-7">
+          <b-row class="justify-content-center pb-1">
+            <img src="img/theme/logo.png" class="login-image" alt="...">
+          </b-row>
           <b-row class="justify-content-center">
             <b-col xl="5" lg="6" md="8" class="px-5">
-              <h1 class="text-white">Bem vindo(a)!</h1>
+              <p><h1 class="text-white">Bem vindo(a)!</h1></p>
               <p class="text-lead text-white">Entre com seus dados para acessar a plataforma.</p>
             </b-col>
           </b-row>
@@ -15,7 +18,7 @@
      
     </div>
     <!-- Page content -->
-    <b-container class="mt--8 pb-5">
+    <b-container class="mt--9 pb-5">
       <b-row class="justify-content-center">
         <b-col lg="5" md="7">
           <b-card no-body class="bg-secondary border-0 mb-0">
@@ -64,6 +67,7 @@
   </div>
 </template>
 <script>
+  import authService from '../../services/auth-service';
   export default {
     data() {
       return {
@@ -75,10 +79,16 @@
       };
     },
     methods: {
-      onSubmit() {
-        // this will be called only after form is valid. You can do api call here to login
+      async onSubmit() {
+        const authData = await authService.login(this.model.email, this.model.password);
+        localStorage.setItem('authData', JSON.stringify(authData));
         this.$router.push({name: 'contacts'})
       }
     }
   };
 </script>
+<style lang="scss">
+  .login-image{
+    max-height: 8rem;
+  }
+</style>

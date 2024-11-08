@@ -1,17 +1,21 @@
 <template>
   <div>
     <!-- Header -->
-    <div class="header py-7 py-lg-8 pt-lg-9">
+    <div class="header py-5 py-lg-6 pt-lg-7">
       <b-container>
         <div class="header-body text-center mb-7">
+          <b-row class="justify-content-center pb-1">
+            <img src="img/theme/logo.png" class="login-image" alt="...">
+          </b-row>
           <b-row class="justify-content-center">
             <b-col xl="5" lg="6" md="8" class="px-5">
               <h1 class="text-white">Bem vindo(a)!</h1>
-              <p class="text-lead text-white">Informe sua nova senha nos campos a seguir.</p>
+              <p class="text-lead text-white">Redefina sua senha.</p>
             </b-col>
           </b-row>
         </div>
       </b-container>
+     
     </div>
     <!-- Page content -->
     <b-container class="mt--8 pb-5">
@@ -64,6 +68,7 @@
   </div>
 </template>
 <script>
+import authService from '../../services/auth-service';
   export default {
     data() {
       return {
@@ -76,11 +81,14 @@
       };
     },
     methods: {
-      onSubmit() {
+      async onSubmit() {
         if(this.model.password !== this.model.passwordConfirmation){
           this.failure = true
         } else {
+          await authService.passwordRecovery({ token: this.$route.query.token, novaSenha: this.model.password })
           this.failure = false
+          alert('Senha alterada com sucesso!')
+          this.$router.push({name: 'login'})
         }
       }
     }

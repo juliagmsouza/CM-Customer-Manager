@@ -1,20 +1,24 @@
 <template>
   <div>
     <!-- Header -->
-    <div class="header py-7 py-lg-8 pt-lg-9">
-      <b-container class="container">
+    <div class="header py-5 py-lg-6 pt-lg-7">
+      <b-container>
         <div class="header-body text-center mb-7">
+          <b-row class="justify-content-center pb-1">
+            <img src="img/theme/logo.png" class="login-image" alt="...">
+          </b-row>
           <b-row class="justify-content-center">
             <b-col xl="5" lg="6" md="8" class="px-5">
-              <h1 class="text-white">Criar Conta</h1>
-              <p class="text-lead text-white">Faça seu cadastro abaixo para começar a utilizar nossos serviços.</p>
+              <p><h1 class="text-white">Bem vindo(a)!</h1></p>
+              <p class="text-lead text-white">Entre com seus dados para criar uma conta.</p>
             </b-col>
           </b-row>
         </div>
       </b-container>
+     
     </div>
     <!-- Page content -->
-    <b-container class="mt--8 pb-5">
+    <b-container class="mt--8">
       <!-- Table -->
       <b-row class="justify-content-center">
         <b-col lg="6" md="8" >
@@ -63,13 +67,18 @@
               </validation-observer>
             </b-card-body>
           </b-card>
+          <b-row class="mt-3">
+            <b-col cols="6">
+              <router-link to="/login" class="text-light"><small>Login</small></router-link>
+            </b-col>
+          </b-row>
         </b-col>
       </b-row>
     </b-container>
   </div>
 </template>
 <script>
-
+  import authService from '../../services/auth-service';
   export default {
     name: 'register',
     data() {
@@ -77,14 +86,15 @@
         model: {
           name: '',
           email: '',
-          password: '',
-          agree: false
+          password: ''
         }
       }
     },
     methods: {
-      onSubmit() {
-        // this will be called only after form is valid. You can do an api call here to register users
+      async onSubmit() {
+       await authService.createUser(this.model)
+       alert('Cadastro realizado com sucesso')
+       this.$router.push({name: 'login'})
       }
     }
 

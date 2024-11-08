@@ -26,7 +26,7 @@
             </base-input>
           </b-col>
           <b-col lg="6" class="d-flex align-items-center">
-            <b-form-checkbox v-model="contact.favorited" name="check-button" switch>
+            <b-form-checkbox v-model="contato.favorito" name="check-button" switch>
               Favorito
             </b-form-checkbox>
           </b-col>
@@ -60,15 +60,16 @@
         </b-row>
       </div>
     </b-form>
-    <b-button variant="primary" class="float-right">Adicionar</b-button>
+    <b-button variant="primary" class="float-right" @click="addContact">Adicionar</b-button>
   </card>
 </template>
 <script>
+  import contactService from '../../../services/contact-service';
   export default {
     data() {
       return {
         contato: {
-          "favorited": false,
+          "favorito": false,
           "nome": "",
           "email": "",
           "telefone": "",
@@ -81,8 +82,20 @@
       };
     },
     methods: {
-      updateProfile() {
-        alert('Your data: ' + JSON.stringify(this.user));
+      async addContact() {
+        await contactService.addContact(this.contato);
+        alert('Contato adicionado');
+        this.contato = {
+          "favorito": false,
+          "nome": "",
+          "email": "",
+          "telefone": "",
+          "favorito": false,
+          "rua": "",
+          "cidade": "",
+          "estado": "",
+          "cep": ""
+        }
       }
     }
   };

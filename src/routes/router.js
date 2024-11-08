@@ -19,4 +19,15 @@ const router = new VueRouter({
   }
 });
 
+router.beforeEach((to, from, next) => {
+  if(!['login','register','password-recovery','password-reset'].includes(to.name)){
+    const authData = JSON.parse(localStorage.getItem('authData'));
+    if(authData && authData.token){
+      return next();
+    }
+  
+    window.location.href = '/login'
+  }
+  next();
+})
 export default router;

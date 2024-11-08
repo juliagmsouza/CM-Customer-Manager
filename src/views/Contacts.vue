@@ -36,6 +36,7 @@
       <template #modal-footer>
         <b-row>
           <b-col>
+            <b-button v-if="!edit" variant="danger" @click="deleteContact">Excluir contato</b-button>
             <b-button variant="primary" @click="edit ? saveEdit() : startEdit()">
               <i class="ni" :class="edit ?  'ni-check-bold' : 'ni-settings'"></i>
               {{ edit ? 'Salvar' : 'Editar'}}
@@ -109,8 +110,8 @@
               <h4>Telefone</h4>
               {{ contato.telefone }}
             </b-col>
-            <b-col lg="6" class="d-flex align-items-center">
-             <h4>{{ contato.favorito ? 'Contato Favoritado!' : '' }}</h4>
+            <b-col lg="6" class="d-flex">
+             <h4>{{ contato.favorito ? 'Contato na lista de favoritos!' : '' }}</h4>
               
             </b-col>
           </b-row>
@@ -146,6 +147,7 @@
   import Vue from 'vue'
   import VueClipboard from 'vue-clipboard2'
   import BaseHeader from '@/components/BaseHeader';
+  import contactService from '../services/contact-service';
 
   Vue.use(VueClipboard)
   export default {
@@ -158,43 +160,16 @@
         edit: false,
         favorited: false,
         SelectedContactTitle: '',
-        contacts: [
-          {
-            "id": 4,
-            "nome": "Serviço de manutenção TESTE"
-          },
-          {
-            "id": 5,
-            "nome": "Luia Jouza"
-          },
-          {
-            "id": 6,
-            "nome": "Samuca abc"
-          },
-          {
-            "id": 7,
-            "nome": "Lanches Larica"
-          },
-          {
-            "id": 8,
-            "nome": "Cachorro quente pracinha"
-          },
-          {
-            "id": 9,
-            "nome": "Dom Pedro"
-          },
-        ],
-        contato: {
-          "favorited": false,
-          "nome": "sdfsdfs",
-          "email": "asdasdas",
-          "telefone": "asdasdas",
-          "favorito": true,
-          "rua": "asdasdasda",
-          "cidade": "asdasdsad",
-          "estado": "asdasdsa",
-          "cep": "asdasdas"
-        }
+        contacts: [],
+        contato: {}
+      }
+    },
+    async mounted(){
+      await this.getContacts()
+    },
+    watch: {
+      async favorited(){
+        await this.getContacts()
       }
     },
     methods: {
@@ -221,17 +196,31 @@
 
         return firstInitial + lastInitial;
       },
-      openDetailModal(selectedItem) {
+      async openDetailModal(selectedItem) {
+        const data = await contactService.detailContact(selectedItem.id)
         this.SelectedContactTitle = `Detalhes de ${selectedItem.nome}`
+        this.contato = {
+          ...data,
+          ...data.Endereco
+        }
         // Fazer query aqui
         this.$bvModal.show('detail-contact-modal')
       },
       startEdit() {
-        console.log('asdasdsad')
         this.edit = !this.edit
       },
-      saveEdit() {
+      async saveEdit() {
+        await contactService.editContact(this.contato.id, this.contato)
         this.edit = !this.edit
+        await this.getContacts()
+      },
+      async getContacts() {
+        this.contacts = await contactService.getContacts(this.favorited);
+      },
+      async deleteContact() {
+        await contactService.deleteContact(this.contato.id)
+        this.$bvModal.hide('detail-contact-modal')
+        await this.getContacts()
       }
 
     }

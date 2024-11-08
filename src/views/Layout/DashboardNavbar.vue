@@ -24,7 +24,7 @@
           <b-media no-body class="align-items-center">
             <i class="ni ni-circle-08 text-primary" style="font-size: 1.7em"></i>
             <b-media-body class="ml-2 d-none d-lg-block">
-              <span class="mb-0 text-sm  font-weight-bold">John Snow</span>
+              <span class="mb-0 text-sm  font-weight-bold">{{ username }}</span>
             </b-media-body>
           </b-media>
         </a>
@@ -32,28 +32,12 @@
         <template>
 
           <b-dropdown-header class="noti-title">
-            <h6 class="text-overflow m-0">Welcome!</h6>
+            <h6 class="text-overflow m-0">Bem vindo(a), {{ username }} !</h6>
           </b-dropdown-header>
-          <b-dropdown-item href="#!">
-            <i class="ni ni-single-02"></i>
-            <span>My profile</span>
-          </b-dropdown-item>
-          <b-dropdown-item href="#!">
-            <i class="ni ni-settings-gear-65"></i>
-            <span>Settings</span>
-          </b-dropdown-item>
-          <b-dropdown-item href="#!">
-            <i class="ni ni-calendar-grid-58"></i>
-            <span>Activity</span>
-          </b-dropdown-item>
-          <b-dropdown-item href="#!">
-            <i class="ni ni-support-16"></i>
-            <span>Support</span>
-          </b-dropdown-item>
           <div class="dropdown-divider"></div>
-          <b-dropdown-item href="#!">
+          <b-dropdown-item @click="logout">
             <i class="ni ni-user-run"></i>
-            <span>Logout</span>
+            <span>Sair</span>
           </b-dropdown-item>
 
         </template>
@@ -89,9 +73,14 @@ export default {
       activeNotifications: false,
       showMenu: false,
       searchModalVisible: false,
-      searchQuery: ''
+      searchQuery: '',
+      username: ''
     };
   },
+  mounted(){
+    const authData = JSON.parse(localStorage.getItem('authData'))
+    this.username = authData.name
+  },  
   methods: {
     capitalizeFirstLetter(string) {
       return string.charAt(0).toUpperCase() + string.slice(1);
@@ -101,6 +90,10 @@ export default {
     },
     closeDropDown() {
       this.activeNotifications = false;
+    },
+    logout()  {
+      localStorage.clear();
+      this.$router.push({name: 'login'})
     }
   }
 };

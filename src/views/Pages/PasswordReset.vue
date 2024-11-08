@@ -1,13 +1,16 @@
 <template>
   <div class="pb-6">
     <!-- Header -->
-    <div class="header py-7 py-lg-8 pt-lg-9">
+    <div class="header py-5 py-lg-6 pt-lg-7">
       <b-container>
         <div class="header-body text-center mb-7">
+          <b-row class="justify-content-center pb-1">
+            <img src="img/theme/logo.png" class="login-image" alt="...">
+          </b-row>
           <b-row class="justify-content-center">
             <b-col xl="5" lg="6" md="8" class="px-5">
               <h1 class="text-white">Bem vindo(a)!</h1>
-              <p class="text-lead text-white">Entre com seus dados para recuperar a senha.</p>
+              <p class="text-lead text-white">Insira seu email para recuperar o acesso.</p>
             </b-col>
           </b-row>
         </div>
@@ -19,20 +22,16 @@
       <b-row class="justify-content-center">
         <b-col lg="5" md="7">
           <b-card no-body class="bg-secondary border-0 mb-0">
-            <b-alert :show="success" variant="info" class="m-2">O link de recuperação foi enviado para este e-mail.</b-alert>
+            <b-alert :show="success" variant="info" class="m-2">O link de recuperação foi enviado para este
+              e-mail.</b-alert>
             <b-card-body class="px-lg-5 py-lg-5">
               <div class="text-center text-muted mb-4">
                 <h4>Informe seu e-mail: </h4>
               </div>
               <validation-observer v-slot="{handleSubmit}" ref="formValidator">
                 <b-form role="form" @submit.prevent="handleSubmit(onSubmit)">
-                  <base-input alternative
-                              class="mb-3"
-                              name="Email"
-                              :rules="{required: true, email: true}"
-                              prepend-icon="ni ni-email-83"
-                              placeholder="Email"
-                              v-model="model.email">
+                  <base-input alternative class="mb-3" name="Email" :rules="{required: true, email: true}"
+                    prepend-icon="ni ni-email-83" placeholder="Email" v-model="model.email">
                   </base-input>
                   <div class="text-center">
                     <base-button type="primary" native-type="submit" class="my-4">Enviar link</base-button>
@@ -55,6 +54,7 @@
   </div>
 </template>
 <script>
+  import authService from '../../services/auth-service';
   export default {
     data() {
       return {
@@ -67,7 +67,8 @@
       };
     },
     methods: {
-      onSubmit() {
+      async onSubmit() {
+        await authService.passwordReset(this.model.email)
         this.success = true
       }
     }
