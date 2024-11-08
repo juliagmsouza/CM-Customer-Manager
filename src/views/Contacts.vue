@@ -63,7 +63,7 @@
               </base-input>
             </b-col>
             <b-col lg="6" class="d-flex align-items-center">
-              <b-form-checkbox v-model="contato.favorited" name="check-button" switch>
+              <b-form-checkbox v-model="contato.favorito" name="check-button" switch>
                 Favorito
               </b-form-checkbox>
             </b-col>

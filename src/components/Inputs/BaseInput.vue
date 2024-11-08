@@ -47,7 +47,7 @@
       </slot>
       <slot name="error">
         <div v-if="errors[0]" class="invalid-feedback" style="display: block;">
-          {{ errors[0] }}
+          {{ errorMapper[errors[0]] || 'Campo inválido' }}
         </div>
       </slot>
     </b-form-group>
